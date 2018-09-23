@@ -130,8 +130,10 @@ distributed in comoving volume and on the sky, so
 where $V_\mathrm{max}$ is some suitably large comoving volume that encompasses
 all galaxies in the survey.  At sufficiently small redshifts, $p\left( z_i
 \right) \propto z_i^2$.  Note that at \emph{all} redshifts, $p\left( z_i
-\right)$ is independent of $H_0$.  Finally, we arrive at the marginal likelihood
-for $H_0$ given the joint observations:
+\right)$ is independent of $H_0$.
+
+Finally, we arrive at the marginal likelihood for $H_0$ given the joint
+observations:
 %
 \begin{multline}
     \label{eq:H0-marginal-likelihood}
@@ -213,34 +215,83 @@ different directions; the limit of this procedure yields the formulas in
 
 \section{Practical Considerations}
 
-Evaluating Eq.\ \eqref{eq:H0-marginal-likelihood} requires the ability to compute the \ac{GW} marginal likelihood at arbitrary $d_L$ and $\Omega$.  Happily, a standard data product provided by LIGO \citep{Singer2016} can be adapted to produce a function that approximates the marginal \ac{GW} likelihood at fixed locations on the sky corresponding to HEALPix pixels \citep{Gorski2005}.  The method in \citet{Singer2016} fits the \emph{posterior} over distance and sky position from a LIGO analysis using a per-pixel ansatz where
+Evaluating Eq.\ \eqref{eq:H0-marginal-likelihood} requires the ability to
+compute the \ac{GW} marginal likelihood at arbitrary $d_L$ and $\Omega$.
+Happily, a standard data product provided by LIGO \citep{Singer2016} can be
+adapted to produce a function that approximates the marginal \ac{GW} likelihood
+at fixed locations on the sky corresponding to HEALPix pixels
+\citep{Gorski2005}.  The method in \citet{Singer2016} fits the \emph{posterior}
+over distance and sky position from a LIGO analysis using a per-pixel ansatz
+where
+%
 \begin{equation}
     \label{eq:gtd-ansatz}
     p\left( d_L, \Omega \mid \dGW \right) = \frac{\rho_i}{A} \frac{N_i}{\sqrt{2\pi} \sigma_i} \exp\left[ -\frac{1}{2} \left(\frac{d_L-\mu_i}{\sigma_i}\right)^2 \right] d_L^2,
 \end{equation}
-with $\Omega$ in HEALPix pixel $i$; $N_i$, $\rho_i$, $\mu_i$, and $\sigma_i$ per-pixel fitting parameters; and $A$ the area of the pixel.  Since the standard LIGO distance prior is proportional to $d_L^2$, this means that the \ac{GW} marginal likelihood when $\Omega$ is in pixel $i$ is (up to ignorable constants)
+%
+with $\Omega$ in HEALPix pixel $i$; $N_i$, $\rho_i$, $\mu_i$, and $\sigma_i$
+per-pixel fitting parameters; and $A$ the area of the pixel.  Since the standard
+LIGO distance prior is proportional to $d_L^2$, this means that the \ac{GW}
+marginal likelihood when $\Omega$ is in pixel $i$ is (up to ignorable constants)
+%
 \begin{equation}
     p\left( \dGW \mid d_L, \Omega \right) \propto \frac{\rho_i}{A} \frac{N_i}{\sqrt{2\pi} \sigma_i} \exp\left[ -\frac{1}{2} \left(\frac{d_L-\mu_i}{\sigma_i}\right)^2 \right].
 \end{equation}
+%
 (Note the missing factor of $d_L^2$ relative to Eq.\ \eqref{eq:gtd-ansatz}.)
 
 If we are in the linear regime, where
+%
 \begin{equation}
     d_L = \frac{c z}{H_0}
 \end{equation}
+%
 to sufficient accuracy, the \ac{EM} likelihood is Gaussian in the redshift,
+%
 \begin{equation}
     p\left( \dEM \mid z_i, \Omega_i \right) \propto \frac{1}{\sqrt{2\pi} \sigma_{z,i}} \exp\left[ -\frac{1}{2} \left( \frac{z - z_{i,\mathrm{obs}}}{\sigma_{i,z}} \right)^2 \right],
 \end{equation}
-and we assume that the \ac{EM} data determines the sky position of each galaxy precisely, then the marginalization integrals over redshift and sky position in Eq.\ \eqref{eq:H0-marginal-likelihood} can be performed analytically.  The result, when galaxy $i$ lies inside pixel $k_i$, is
-\begin{equation}
-     p\left( \dGW, \dEM \mid H_0 \right) = H_0 \sum_{i=1}^{\Ngal} \frac{w_i \rho_{k_i} N_{k_i}}{A \sqrt{2\pi} \Sigma} \exp\left[ -\frac{1}{2} \left( \frac{H_0 \mu_{k_i} - c z_{i,\mathrm{obs}}}{2 \Sigma^2} \right) \right],
-\end{equation}
+%
+we assume that the \ac{EM} data determines the sky position of each galaxy
+precisely, then the marginalization integrals over redshift and sky position in
+Eq.\ \eqref{eq:H0-marginal-likelihood} can be performed analytically, as we now
+show. The result, when galaxy $i$ lies inside pixel $k_i$, is
+%
+\begin{multline}
+     p\left( \dGW, \dEM \mid H_0 \right) = \\ \frac{3 H_0^3}{z_\mathrm{max}^3} \sum_{i=1}^{\Ngal} \frac{w_i \rho_{k_i} N_{k_i}}{A \sqrt{2\pi} \Sigma} \exp\left[ -\frac{\left(H_0 \mu_{k_i} - c z_{i,\mathrm{obs}}\right)^2}{2 \Sigma^2} \right] \\ \times \left( \frac{\sigma_{k_i}^2 \sigma_{i,z}^2}{\Sigma^2} + \frac{\left( c \mu_{k_i} \sigma_{i,z}^2 + H_0 \sigma_{k_i}^2 z_{i,\mathrm{obs}} \right)^2}{\Sigma^4} \right),
+\end{multline}
+%
 with
+%
 \begin{equation}
     \Sigma^2 = H_0^2 \sigma_{k_i}^2 + c^2 \sigma_{i,z}^2.
 \end{equation}
-It is reasonable to truncate the sum above by ignoring galaxies for which $\rho_{k_i}$ (the integrated per-pixel \ac{GW} posterior probability) is sufficiently small.
+%
+The galaxy catalog is actually volume-limited (we are assuming that it is
+complete over the entire \ac{GW} sensitive volume), so the factor
+$H_0/z_\mathrm{max}$ is actually independent of $H_0$ and equal to
+$c/d_\mathrm{max}$.
+
+It is reasonable to truncate the sum above by ignoring galaxies for which
+$\rho_{k_i}$ (the integrated per-pixel \ac{GW} posterior probability) is
+sufficiently small.
+
+\subsection{The Uninformative Limits}
+
+There are two different limits in which the \ac{EM} measurement is
+uninformative.  The first limit is when the individual redshift measurements are
+too uncertain to meaningfully constrain $H_0$.  In this limit
+%
+\begin{equation}
+  H_0^2 \sigma_{k_i}^2 \ll c^2 \sigma_{z,i}^2 \to \infty
+\end{equation}
+%
+in the relevant pixels.  Since the $c^2 \sigma_{i,z}^2$ term dominates $\Sigma$
+and also eliminates the exponential, the likelihood function for $H_0$ becomes
+constant and the measurement is uninformative about $H_0$.
+
+The second limit is when the number of galaxies in the \ac{GW} localization
+region is large.  TODO: finish this terrible algebra.
 
 \bibliography{h0stat}
 
