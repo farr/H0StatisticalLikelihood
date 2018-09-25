@@ -294,11 +294,11 @@ It is reasonable to truncate the sum above by ignoring galaxies for which
 $\rho_{k_i}$ (the integrated per-pixel \ac{GW} posterior probability) is
 sufficiently small.
 
-\subsection{The Uninformative Limits}
+\subsection{The Uninformative Limit}
 
-There are two different limits in which the \ac{EM} measurement is
-uninformative.  The first limit is when the individual redshift measurements are
-too uncertain to meaningfully constrain $H_0$.  In this limit
+In the limit where the individual redshift measurements are too uncertain to
+meaningfully constrain $H_0$, the measurement should be uninformative.  In this
+limit
 %
 \begin{equation}
   H_0^2 \sigma_{k_i}^2 \ll c^2 \sigma_{z,i}^2 \to \infty
@@ -308,8 +308,33 @@ in the relevant pixels.  Since the $c^2 \sigma_{i,z}^2$ term dominates $\Sigma$
 and also eliminates the exponential, the likelihood function for $H_0$ becomes
 constant and the measurement is uninformative about $H_0$.
 
-The second limit is when the number of galaxies in the \ac{GW} localization
-region is large.  TODO: finish this terrible algebra.
+\subsection{The Maximally Informative Limit}
+
+Suppose there is only a single galaxy in the entire sky area (maybe our sky area
+is very small, or maybe we have an \ac{EM} counterpart that eliminates all the
+galaxies in the catalog but one).  Then the sum collapses to one term, and the
+pixel-dependent parts become ignorable constants, so
+%
+\begin{multline}
+  p\left( \dGW, \dEM \mid H_0 \right) \propto \frac{1}{\sqrt{2\pi} \Sigma} \exp\left[ -\frac{\left(H_0 \mu_{k_i} - c z_{i,\mathrm{obs}}\right)^2}{2 \Sigma^2} \right] \\ \times \left( \frac{\sigma_{k_i}^2 \sigma_{i,z}^2}{\Sigma^2} + \frac{\left( c \mu_{k_i} \sigma_{i,z}^2 + H_0 \sigma_{k_i}^2 z_{i,\mathrm{obs}} \right)^2}{\Sigma^4} \right).
+\end{multline}
+%
+If we now imagine that $c \sigma_{i,z} \ll H_0 \sigma_{k_i}$ for all reasonable
+values of $H_0$, then we do not distinguish any more between
+$z_{i,\mathrm{obs}}$ and $z_i$ and the likelihood becomes
+%
+\begin{equation}
+  p\left( \dGW, \dEM \mid H_0 \right) \propto \frac{1}{\sqrt{2\pi} H_0 \sigma_{k_i}} \exp\left[ -\frac{\left(H_0 \mu_{k_i} - c z_{i}\right)^2}{2 H_0^2 \sigma_{k_i}^2} \right] \left( \frac{z_{i}^2}{H_0^2} \right).
+\end{equation}
+%
+If the \ac{GW} measurement becomes infinitely precise as well, then
+$\sigma_{k_i} \to 0$, and the likelihood becomes
+%
+\begin{equation}
+  p\left( \dGW, \dEM \mid H_0 \right) \propto \delta \left( H_0 \mu_{k_i} - c z_{i}\right) \left( \frac{z_{i}^2}{H_0^2} \right),
+\end{equation}
+%
+which selects $H_0 = c z_i / \mu_{k_i}$ as expected.
 
 \bibliography{h0stat}
 
