@@ -173,9 +173,18 @@ stochastic detection pipeline, $\Pdet\left( d_{\mathrm{GW},\mathrm{observed}}
 \ac{GW} events varies with $H_0$.
 
 Current catalogs are complete (i.e.\ $\Pdet\left( \dEM \right) = 1$) for any
-\ac{GW} detection assuming reasonable values of $H_0$, so here we will focus on
-$\Pdet\left( \dGW \right)$.  Performing the integral over $\dEM$ (remember that
-the \ac{EM} likelihood is normalised), we obtain
+\ac{GW} detection assuming reasonable values of $H_0$.  In this document we
+assume that the galaxy catalog is selected from a flux-limited survey, so (to
+sufficient approximation) it is complete to some $d_{L, \mathrm{max}}$; this
+corresponds to a $z_{\mathrm{max}}\left( d_{L,\mathrm{max}}, H_0 \right)$ that
+depends on $H_0$.  An alternative perspective is to assume that the catalogs are
+complete to some redshift $z_\mathrm{max}$ in which case
+$d_{L,\mathrm{max}}\left( z_\mathrm{max}, H_0 \right)$ depends on $H_0$.  Final
+expressions for the likelihood are identical between these two approaches, but
+intermediate expressions differ in some places, as I note below.
+
+Performing the integral over $\dEM$ (remember that the \ac{EM} likelihood is
+normalised), we obtain
 %
 \begin{multline}
     \beta\left( H_0 \right) =  \int \dd \dGW \, \Pdet\left( \dGW \right) \\ \times \sum_{i=1}^{\Ngal} w_i \int \dd z_i \, \dd \Omega_i \, p\left( z_i, \Omega_i \right) p\left( \dGW \mid d_L\left( z_i, H_0 \right), \Omega_i \right).
@@ -189,20 +198,19 @@ normalized, so we are left with
      \beta\left( H_0 \right) =  \int \dd \dGW \, \dd z \, \dd \Omega \, \Pdet\left( \dGW \right)  p\left( z, \Omega \right) p\left( \dGW \mid d_L\left( z, H_0 \right), \Omega \right).
 \end{equation}
 %
-We can change variables from $z$ to $d_L$ in the integral, obtaining
+We can change variables from $z$ to $d_L$ in the integral, and integrate up to
+the $\ac{GW}$ horizon, $d_{L,\mathrm{max},\mathrm{GW}}$, where $\Pdet\left( \dGW
+\right) \to 0$, obtaining
 %
 \begin{equation}
-    \beta\left( H_0 \right) =  \int \dd \dGW \, \dd d_L \, \dd \Omega \, \Pdet\left( \dGW \right)  p\left( d_L, \Omega \right) p\left( \dGW \mid d_L, \Omega \right).
+    \beta\left( H_0 \right) =  \int \dd \dGW \, \dd d_L \, \dd \Omega \, \Pdet\left( \dGW \right)  p\left( d_L, \Omega \right) p\left( \dGW \mid d_L, \Omega \right) = \frac{V \left( d_{L,\mathrm{max},\mathrm{GW}} \right)}{V\left( d_{L,\mathrm{max}} \right)}
 \end{equation}
 %
-(Recall that $p\left( z, \Omega \right) \, \dd z \, \dd \Omega = p\left( d_L,
-\Omega \right) \, \dd d_L \, \dd \Omega$.)  But this latter integral is
-independent of $H_0$ so long as the mass distribution assumed in the \ac{GW}
-prior is scale-free or the relevant redshift range is such that the detection
-efficiency is independent of the redshifting of mass in the population.  So,
-$\beta\left( H_0 \right) = \mathrm{const}$ as long as \ac{EM} catalogs are
-complete for all observed \ac{GW} events.  Under these assumptions, the
-detection efficiency of LIGO is not dependent on the Hubble constant.
+But this latter integral is independent of $H_0$ under our assumption that the
+catalog is complete to some fixed $d_{L, \mathrm{max}}$, so $\beta\left( H_0
+\right) = \mathrm{const}$; had we assumed instead a maximum redshift for
+completeness, then $d_{L, \mathrm{max}}$ depends on $H_0$ and $\beta\left( H_0
+\right) \propto H_0^3$ as in \citet{Fishbach2018}.
 
 Eventually, \ac{EM} catalogs will not be complete for all \ac{GW} events.  If
 only the set of \ac{GW} events for which the \ac{EM} catalog is complete is used
@@ -252,7 +260,7 @@ to sufficient accuracy, the \ac{EM} likelihood is Gaussian in the redshift,
     p\left( \dEM \mid z_i, \Omega_i \right) \propto \frac{1}{\sqrt{2\pi} \sigma_{z,i}} \exp\left[ -\frac{1}{2} \left( \frac{z - z_{i,\mathrm{obs}}}{\sigma_{i,z}} \right)^2 \right],
 \end{equation}
 %
-we assume that the \ac{EM} data determines the sky position of each galaxy
+and we assume that the \ac{EM} data determines the sky position of each galaxy
 precisely, then the marginalization integrals over redshift and sky position in
 Eq.\ \eqref{eq:H0-marginal-likelihood} can be performed analytically, as we now
 show. The result, when galaxy $i$ lies inside pixel $k_i$, is
@@ -267,10 +275,19 @@ with
     \Sigma^2 = H_0^2 \sigma_{k_i}^2 + c^2 \sigma_{i,z}^2.
 \end{equation}
 %
-The galaxy catalog is actually volume-limited (we are assuming that it is
-complete over the entire \ac{GW} sensitive volume), so the factor
-$H_0/z_\mathrm{max}$ is actually independent of $H_0$ and equal to
-$c/d_\mathrm{max}$.
+We are assuming that the galaxy catalog is complete to some $d_{L,
+\mathrm{max}}$, so the factor $H_0/z_\mathrm{max}$ is independent of $H_0$ and
+equal to $c/d_\mathrm{max}$:
+%
+\begin{multline}
+  p\left( \dGW, \dEM \mid H_0 \right) = \\ \frac{3 c^3}{d_{L,\mathrm{max}}^3} \sum_{i=1}^{\Ngal} \frac{w_i \rho_{k_i} N_{k_i}}{A \sqrt{2\pi} \Sigma} \exp\left[ -\frac{\left(H_0 \mu_{k_i} - c z_{i,\mathrm{obs}}\right)^2}{2 \Sigma^2} \right] \\ \times \left( \frac{\sigma_{k_i}^2 \sigma_{i,z}^2}{\Sigma^2} + \frac{\left( c \mu_{k_i} \sigma_{i,z}^2 + H_0 \sigma_{k_i}^2 z_{i,\mathrm{obs}} \right)^2}{\Sigma^4} \right).
+\end{multline}
+%
+If, alternately, we had assumed that the catalog is complete to some
+$z_\mathrm{max}$ then $\beta\left( H_0 \right) \propto H_0^3$ and this factor
+would cancel the $H_0^3$ in the numerator, again leading to a likelihood that
+lacks a pre-factor dependent on $H_0$.  Both approaches agree on the likelihood
+\emph{when the selection effects are dominated by the \ac{GW} horizon}.
 
 It is reasonable to truncate the sum above by ignoring galaxies for which
 $\rho_{k_i}$ (the integrated per-pixel \ac{GW} posterior probability) is
