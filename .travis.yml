@@ -1,6 +1,11 @@
-sudo: required
-dist: trusty
-before_install:
-- sudo apt-get -qq update && sudo apt-get install -y --no-install-recommends texlive-full
-script:
-- pdflatex -interaction=nonstopmode -halt-on-error *.tex
+sudo: false
+language: generic
+matrix:
+  include:
+    - os: linux
+      env: TEST_LANG='paper'
+script: |
+  if [[ $TEST_LANG == paper ]]
+  then
+    source .ci/build-paper.sh
+  fi
