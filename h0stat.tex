@@ -252,9 +252,6 @@ different directions; the limit of this procedure yields the formulas in
 
 \section{Practical Considerations}
 
-TODO: The evidences haven't been incorporated in this line of reasoning, but can
-be (since the evidence for a Gaussian is analytically tractable).
-
 Evaluating Eq.\ \eqref{eq:H0-marginal-likelihood} requires the ability to
 compute the \ac{GW} marginal likelihood at arbitrary $d_L$ and $\Omega$.
 Happily, a standard data product provided by LIGO \citep{Singer2016} can be
@@ -289,16 +286,23 @@ If we are in the linear regime, where
 to sufficient accuracy, the \ac{EM} likelihood is Gaussian in the redshift,
 %
 \begin{equation}
-    p\left( \dEM \mid z_i, \Omega_i \right) \propto \frac{1}{\sqrt{2\pi} \sigma_{z,i}} \exp\left[ -\frac{1}{2} \left( \frac{z - z_{i,\mathrm{obs}}}{\sigma_{i,z}} \right)^2 \right],
+    p\left( \dEM \mid z_i, \Omega_i \right) \propto \frac{1}{\sqrt{2\pi} \sigma_{z,i}} \exp\left[ -\frac{1}{2} \left( \frac{z_i - z_{i,\mathrm{obs}}}{\sigma_{i,z}} \right)^2 \right],
 \end{equation}
 %
 and we assume that the \ac{EM} data determines the sky position of each galaxy
 precisely, then the marginalization integrals over redshift and sky position in
 Eq.\ \eqref{eq:H0-marginal-likelihood} can be performed analytically, as we now
-show. The result, when galaxy $i$ lies inside pixel $k_i$, is
+show. The evidence integral, assuming a $p\left( z_i \right) \propto z_i^2$
+prior becomes
+%
+\begin{equation}
+  \mathcal{Z}_i = \int \dd z_i \, z_i^2 \frac{1}{\sqrt{2\pi} \sigma_{z,i}} \exp\left[ -\frac{1}{2} \left( \frac{z_i - z_{i,\mathrm{obs}}}{\sigma_{i,z}} \right)^2 \right] = \sigma_{i,z}^2 + z_{i,\mathrm{obs}}^2.
+\end{equation}
+%
+The result, when galaxy $i$ lies inside pixel $k_i$, is
 %
 \begin{multline}
-     p\left( \dGW, \dEM \mid H_0 \right) = \\ \frac{3 H_0^3}{z_\mathrm{max}^3} \sum_{i=1}^{\Ngal} \frac{w_i \rho_{k_i} N_{k_i}}{A \sqrt{2\pi} \Sigma} \exp\left[ -\frac{\left(H_0 \mu_{k_i} - c z_{i,\mathrm{obs}}\right)^2}{2 \Sigma^2} \right] \\ \times \left( \frac{\sigma_{k_i}^2 \sigma_{i,z}^2}{\Sigma^2} + \frac{\left( c \mu_{k_i} \sigma_{i,z}^2 + H_0 \sigma_{k_i}^2 z_{i,\mathrm{obs}} \right)^2}{\Sigma^4} \right),
+     p\left( \dGW \mid \dEM, H_0 \right) = \\ \frac{3 H_0^3}{z_\mathrm{max}^3} \sum_{i=1}^{\Ngal} \frac{w_i \rho_{k_i} N_{k_i}}{A \sqrt{2\pi} \Sigma \mathcal{Z}_i} \exp\left[ -\frac{\left(H_0 \mu_{k_i} - c z_{i,\mathrm{obs}}\right)^2}{2 \Sigma^2} \right] \\ \times \left( \frac{\sigma_{k_i}^2 \sigma_{i,z}^2}{\Sigma^2} + \frac{\left( c \mu_{k_i} \sigma_{i,z}^2 + H_0 \sigma_{k_i}^2 z_{i,\mathrm{obs}} \right)^2}{\Sigma^4} \right),
 \end{multline}
 %
 with
@@ -312,7 +316,7 @@ We are assuming that the galaxy catalog is complete to some $d_{L,
 equal to $c/d_\mathrm{max}$:
 %
 \begin{multline}
-  p\left( \dGW, \dEM \mid H_0 \right) = \\ \frac{3 c^3}{d_{L,\mathrm{max}}^3} \sum_{i=1}^{\Ngal} \frac{w_i \rho_{k_i} N_{k_i}}{A \sqrt{2\pi} \Sigma} \exp\left[ -\frac{\left(H_0 \mu_{k_i} - c z_{i,\mathrm{obs}}\right)^2}{2 \Sigma^2} \right] \\ \times \left( \frac{\sigma_{k_i}^2 \sigma_{i,z}^2}{\Sigma^2} + \frac{\left( c \mu_{k_i} \sigma_{i,z}^2 + H_0 \sigma_{k_i}^2 z_{i,\mathrm{obs}} \right)^2}{\Sigma^4} \right).
+  p\left( \dGW \mid \dEM, H_0\right) = \\ \frac{3 c^3}{d_{L,\mathrm{max}}^3} \sum_{i=1}^{\Ngal} \frac{w_i \rho_{k_i} N_{k_i}}{A \sqrt{2\pi} \Sigma \mathcal{Z}_i} \exp\left[ -\frac{\left(H_0 \mu_{k_i} - c z_{i,\mathrm{obs}}\right)^2}{2 \Sigma^2} \right] \\ \times \left( \frac{\sigma_{k_i}^2 \sigma_{i,z}^2}{\Sigma^2} + \frac{\left( c \mu_{k_i} \sigma_{i,z}^2 + H_0 \sigma_{k_i}^2 z_{i,\mathrm{obs}} \right)^2}{\Sigma^4} \right).
 \end{multline}
 %
 If, alternately, we had assumed that the catalog is complete to some
@@ -347,25 +351,49 @@ galaxies in the catalog but one).  Then the sum collapses to one term, and the
 pixel-dependent parts become ignorable constants, so
 %
 \begin{multline}
-  p\left( \dGW, \dEM \mid H_0 \right) \propto \frac{1}{\sqrt{2\pi} \Sigma} \exp\left[ -\frac{\left(H_0 \mu_{k_i} - c z_{i,\mathrm{obs}}\right)^2}{2 \Sigma^2} \right] \\ \times \left( \frac{\sigma_{k_i}^2 \sigma_{i,z}^2}{\Sigma^2} + \frac{\left( c \mu_{k_i} \sigma_{i,z}^2 + H_0 \sigma_{k_i}^2 z_{i,\mathrm{obs}} \right)^2}{\Sigma^4} \right).
+  p\left( \dGW \mid \dEM, H_0 \right) \propto \frac{1}{\sqrt{2\pi} \Sigma \mathcal{Z}_i} \exp\left[ -\frac{\left(H_0 \mu_{k_i} - c z_{i,\mathrm{obs}}\right)^2}{2 \Sigma^2} \right] \\ \times \left( \frac{\sigma_{k_i}^2 \sigma_{i,z}^2}{\Sigma^2} + \frac{\left( c \mu_{k_i} \sigma_{i,z}^2 + H_0 \sigma_{k_i}^2 z_{i,\mathrm{obs}} \right)^2}{\Sigma^4} \right).
 \end{multline}
 %
 If we now imagine that $c \sigma_{i,z} \ll H_0 \sigma_{k_i}$ for all reasonable
-values of $H_0$, then we do not distinguish any more between
-$z_{i,\mathrm{obs}}$ and $z_i$ and the likelihood becomes
+values of $H_0$ and that $\sigma_{i,z} \ll z_{i,\mathrm{obs}}$, then we do not
+distinguish any more between $z_{i,\mathrm{obs}}$ and $z_i$ and the likelihood
+becomes
 %
 \begin{equation}
-  p\left( \dGW, \dEM \mid H_0 \right) \propto \frac{1}{\sqrt{2\pi} H_0 \sigma_{k_i}} \exp\left[ -\frac{\left(H_0 \mu_{k_i} - c z_{i}\right)^2}{2 H_0^2 \sigma_{k_i}^2} \right] \left( \frac{z_{i}^2}{H_0^2} \right).
+  p\left( \dGW \mid \dEM, H_0 \right) \propto \frac{1}{\sqrt{2\pi} H_0 \sigma_{k_i}} \exp\left[ -\frac{\left(H_0 \mu_{k_i} - c z_{i}\right)^2}{2 H_0^2 \sigma_{k_i}^2} \right] \left( \frac{1}{H_0^2} \right).
 \end{equation}
 %
 If the \ac{GW} measurement becomes infinitely precise as well, then
 $\sigma_{k_i} \to 0$, and the likelihood becomes
 %
 \begin{equation}
-  p\left( \dGW, \dEM \mid H_0 \right) \propto \delta \left( H_0 \mu_{k_i} - c z_{i}\right) \left( \frac{z_{i}^2}{H_0^2} \right),
+  p\left( \dGW \mid \dEM, H_0 \right) \propto \delta \left( H_0 \mu_{k_i} - c z_{i}\right) \left( \frac{1}{H_0^3} \right),
 \end{equation}
 %
 which selects $H_0 = c z_i / \mu_{k_i}$ as expected.
+
+\subsection{The Many Galaxies Limit}
+
+Suppose there are so many galaxies within the \ac{GW} region on the sky that we
+can treat them as being continuously distributed with density $p\left( z \right)
+\propto z^2$.  To make the expressions tractable, suppose the measurement
+uncertainty on redshift is small, $\sigma_{i,z} \to 0$ and that the \ac{GW}
+source is localized to a single pixel $k$.  Then the \ac{GW} likelihood becomes
+%
+\begin{equation}
+  p\left( \dGW \mid \dEM, H_0 \right) \propto \sum_i \frac{w_i}{\sqrt{2\pi} H_0^3 \sigma_k} \exp\left[ - \frac{\left( H_0 \mu_k - c z_i \right)^2}{2 H_0^2 \sigma_k^2} \right].
+\end{equation}
+%
+Note that the evidence term $\mathcal{Z}_i$ has cancelled the $z_i^2$ appearing
+from the prior we placed on the true redshift of each galaxy.  There are so many
+galaxies that the sum over galaxies becomes an integral, leading to
+%
+\begin{equation}
+  p\left( \dGW \mid \dEM, H_0 \right) \propto \int \dd z \, \frac{p(z)}{\sqrt{2\pi} H_0^3 \sigma_k} \exp\left[ - \frac{\left( H_0 \mu_k - c z \right)^2}{2 H_0^2 \sigma_k^2} \right] \propto \mathrm{const}.
+\end{equation}
+%
+In other words, if the distribution of galaxies is uniform across the \ac{GW}
+localization region then the measurement is uninformative.
 
 \acknowledgements
 
