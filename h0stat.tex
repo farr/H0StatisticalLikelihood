@@ -35,9 +35,15 @@ NY 10010, United States}
 
 \email{wfarr-vscholar@flatironinstitute.org}
 
+\author{Jonathan R. Gair}
+
+\affiliation{School of Mathematics, University of Edinburgh, James Clerk Maxwell Building, Peter Guthrie Tait Road, Edinburgh EH9 3FD, UK}
+
+\email{j.gair@ed.ac.uk}
+
 \begin{abstract}
 %
-  I derive the likelihood function for a ``statistical'' measurement of the
+  We derive the likelihood function for a ``statistical'' measurement of the
   Hubble constant that combines a distance measured by a \ac{GW} observation and
   a catalog of redshifts from possible host galaxies measured by \ac{EM}
   observations.
@@ -100,28 +106,41 @@ cosmological parameters).  We can use these relationships to marginalize over
 (i.e.\ eliminate) $d_L$ and $\OGW$ from the likelihood, obtaining for a single
 galaxy host, $i$
 %
+%\begin{multline}
+%    p\left( \dGW, \dEM \mid i, z_i, \Omega_i, H_0 \right) \equiv \\ \int \dd d_L \, \dd \OGW \, p\left( \dGW \mid d_L, \OGW \right) p\left( \dEM \mid \left\{ z_i, \Omega_i \mid i = 1, \ldots, \Ngal \right\} \right)  \\ \times \delta\left( d_L - d_L\left( z_i, H_0 \right) \right) \delta \left( \OGW - \Omega_i \right).
+%\end{multline}
+%
+%
 \begin{multline}
-    p\left( \dGW, \dEM \mid i, z_i, \Omega_i, H_0 \right) \equiv \\ \int \dd d_L \, \dd \OGW \, p\left( \dGW \mid d_L, \OGW \right) p\left( \dEM \mid \left\{ z_i, \Omega_i \mid i = 1, \ldots, \Ngal \right\} \right)  \\ \times \delta\left( d_L - d_L\left( z_i, H_0 \right) \right) \delta \left( \OGW - \Omega_i \right).
+    p\left( \dGW \mid i, z_i, \Omega_i, H_0 \right) \equiv \\ \int \dd d_L \, \dd \OGW \, p\left( \dGW \mid d_L, \OGW \right)  \delta\left( d_L - d_L\left( z_i, H_0 \right) \right) \delta \left( \OGW - \Omega_i \right).
 \end{multline}
 %
 The integrals are trivial, leaving
 %
-\begin{multline}
-    p\left( \dGW, \dEM \mid i, z_i, \Omega_i, H_0 \right) = \\ p\left( \dGW \mid d_L\left( z_i, H_0 \right), \Omega_i \right) p\left( \dEM \mid \left\{ z_i, \Omega_i \mid i = 1, \ldots, \Ngal \right\} \right).
-\end{multline}
+%\begin{multline}
+%    p\left( \dGW, \dEM \mid i, z_i, \Omega_i, H_0 \right) = \\ p\left( \dGW \mid d_L\left( z_i, H_0 \right), \Omega_i \right) p\left( \dEM \mid \left\{ z_i, \Omega_i \mid i = 1, \ldots, \Ngal \right\} \right).
+%\end{multline}
+\begin{equation}
+    p\left( \dGW \mid i, z_i, \Omega_i, H_0 \right) = p\left( \dGW \mid d_L\left( z_i, H_0 \right), \Omega_i \right).
+\end{equation}
 
 In the absence of other information, we do not know which galaxy hosted the
 \ac{GW} event, so we should marginalize over the choice of galaxy, $i$, with the
 correct weights:
 %
+%\begin{multline}
+%    p\left( \dGW, \dEM \mid \left\{ z_i, \Omega_i \mid i = 1, \ldots, \Ngal \right\}, H_0 \right) = \\ \sum_{i = 1}^{\Ngal} w_i  p\left( \dGW \mid d_L\left( z_i, H_0 \right), \Omega_i \right) p\left( \dEM \mid \left\{ z_i, \Omega_i \mid i = 1, \ldots, \Ngal \right\} \right).
+%\end{multline}
 \begin{multline}
-    p\left( \dGW, \dEM \mid \left\{ z_i, \Omega_i \mid i = 1, \ldots, \Ngal \right\}, H_0 \right) = \\ \sum_{i = 1}^{\Ngal} w_i  p\left( \dGW \mid d_L\left( z_i, H_0 \right), \Omega_i \right) p\left( \dEM \mid \left\{ z_i, \Omega_i \mid i = 1, \ldots, \Ngal \right\} \right).
+    p\left( \dGW \mid \left\{ z_i, \Omega_i \mid i = 1, \ldots, \Ngal \right\}, H_0 \right) = \sum_{i = 1}^{\Ngal} w_i  p\left( \dGW \mid d_L\left( z_i, H_0 \right), \Omega_i \right).
 \end{multline}
 %
-The galaxy redshifts and sky positions are also nuisance parameters in an
-inference of $H_0$ so we should marginalize over them with a suitable choice of
-prior.  A natural prior would be to assume that galaxies are uniformly
-distributed in comoving volume and on the sky, so
+Note that this is just the GW part of the likelihood, and it depends on the true redshifts and sky locations of the host galaxies. The galaxy redshifts and sky positions are nuisance parameters in an inference of $H_0$ so we should marginalize over them with a suitable choice of
+prior, but first we must specify the EM likelihood since this also depends on those parameters. We assume that the EM data consists of independent measurements for each galaxy in the catalogue, with perfect sky location determination and imperfect redshift determination, i.e.,
+\begin{multline}
+p\left( \dEM \mid \left\{ z_i, \Omega_i \mid i = 1, \ldots, \Ngal \right\} \right) = \prod_{j=1}^{\Ngal} \delta(\Omega_{j,obs}-\Omega_j) p(z_{j,obs} | z_j, \Omega_j)
+\end{multline}
+in which we have now replaced $\dEM$ by individual estimated sky locations, $\Omega_{i,obs}$, and redshifts, $z_{i,obs}$, for each galaxy $i$. To marginalise the true redshift and sky location out of the likelihood we need to specify a prior on these parameters. A natural prior would be to assume that galaxies are uniformly distributed in comoving volume and on the sky, so
 %
 \begin{equation}
     p\left( z_i, \Omega_i \right) \dd z_i \, \dd \Omega_i = \frac{1}{4\pi V_\mathrm{max}} \diff{V}{z_i} \, \dd z_i \, \dd \Omega_i
@@ -132,13 +151,22 @@ all galaxies in the survey.  At sufficiently small redshifts, $p\left( z_i
 \right) \propto z_i^2$.  Note that at \emph{all} redshifts, $p\left( z_i
 \right)$ is independent of $H_0$.
 
-Finally, we arrive at the marginal likelihood for $H_0$ given the joint
-observations:
+The above prior is needed for each galaxy and the combined prior for all galaxies is therefore $\prod_j p(z_j, \Omega_j)$. Finally, we arrive at the marginal likelihood for $H_0$ given the joint observations:
 %
 \begin{multline}
-    \label{eq:H0-marginal-likelihood}
-    p\left( \dGW, \dEM \mid H_0 \right) = \sum_{i=1}^{\Ngal} w_i \int \dd z_i \, \dd \Omega_i \, p\left( z_i, \Omega_i \right) p\left( \dGW \mid d_L\left( z_i, H_0 \right), \Omega_i \right) \\ \times p\left( \dEM \mid \left\{ z_i, \Omega_i \mid i = 1, \ldots, \Ngal \right\} \right)
+    p\left( \dGW, \dEM \mid H_0 \right) = \sum_{i=1}^{\Ngal} w_i \prod_j \int \dd z_j \, \dd \Omega_j \, p\left( z_j, \Omega_j \right) p\left( \dGW \mid d_L\left( z_i, H_0 \right), \Omega_i \right) \\ \times \delta(\Omega_{j,obs}-\Omega_j) p(z_{j,obs} | z_j, \Omega_j) \\
+    = \sum_{i=1}^{\Ngal} w_i \prod_j \int \dd z_j \, p\left( z_j, \Omega_{j,obs} \right) p\left( \dGW \mid d_L\left( z_i, H_0 \right), \Omega_{i,obs} \right) \\ \times p(z_{j,obs} | z_j, \Omega_{j,obs}) .
 \end{multline}
+The GW data term depends only on the galaxy $i$ appearing in the sum. Therefore, most of the integrals can be evaluated directly. We introduce the evidences
+\begin{equation}
+{\cal Z}_j = \int p(z_{j,obs} | z, \Omega_{j,obs}) p\left( z, \Omega_{j,obs} \right) dz
+\end{equation}
+and then the previous expression reduces to
+\begin{multline}
+    \label{eq:H0-marginal-likelihood}
+    p\left( \dGW, \dEM \mid H_0 \right) \propto  \sum_{i=1}^{\Ngal} w_i  \int \dd z \, \frac{p\left( z, \Omega_{i,obs} \right) p(z_{i,obs} | z, \Omega_{i,obs}) } {{\cal Z}_i} \\ \times p\left( \dGW \mid d_L\left( z, H_0 \right), \Omega_{i,obs} \right).
+\end{multline}
+The first term inside the integral is the posterior on the true redshift of galaxy $i$ based on the EM data and so this can be interpreted as using the EM data as a prior on the possible redshifts of the host of the GW source.
 
 \subsection{Selection Effects}
 
